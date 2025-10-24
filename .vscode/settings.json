@@ -1,0 +1,5 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "workspace/apps/blinky/Cargo.toml"
+  ]
+}

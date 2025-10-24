@@ -1,0 +1,1 @@
+Use this workspace to develop your Rust applications.
