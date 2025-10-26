@@ -1,6 +1,6 @@
 {
 	"name": "Development Environment for Introduction to Embedded Rust",
-	"image": "env-embedded-rust:latest",
+	"image": "env-embedded-rust-workshop:latest",
 	"workspaceMount": "source=${localWorkspaceFolder}/workspace,target=/home/student/workspace,type=bind",
 	"workspaceFolder": "/home/student/workspace",
 	"features": {},

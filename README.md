@@ -61,7 +61,16 @@ I recommend #1, as it includes all of the necessary components to complete the w
 
 If you want to use Docker, follow the directions on [this page](https://www.docker.com/products/docker-desktop/) to install *Docker Desktop*.
 
-Make sure Docker Desktop is running. Open a command prompt (bash, zsh, PowerShell), navigate to this directory, and build the Docker image:
+Before proceeding, make sure that Docker Desktop is running on your computer.
+
+If this is an in-person workshop, I should have USB flash drives with the necessary installers and pre-made images, as conference WiFi connections can sometimes be spotty. Copy the Docker image for your architecture (`*-amd64.tar` for x86_64 processors or `*-arm64.tar` for ARM64 processors like the Mac M1, M2, etc.) to your computer (e.g. *Downloads/* directory). Run the following command to load the Docker image (where `<ARCH>` is either `amd64` or `arm64`):
+
+```sh
+cd Downloads/
+docker load -i env-embedded-rust-workshop-<ARCH>.tar
+```
+
+However, if you need to build the image from scratch, open a command prompt (bash, zsh, PowerShell), navigate to this directory, and build the Docker image:
 
 ```sh
 docker build -t env-embedded-rust-workshop  .
@@ -69,7 +78,7 @@ docker build -t env-embedded-rust-workshop  .
 
 **IMPORTANT**: Files in the `workspace/` folder will be saved to your host computer. Everything else will be deleted when you exit out of the Docker container.
 
-For the best experience, I recommend using [VS Code](https://code.visualstudio.com/) and installing the [Dev Contaienrs](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. Then in VS Code, press *ctrl + shift + p* and enter `Dev Containers: Attach to Running Container`. Press *enter* to select the *attach to running container* option and press *enter* again to connect to your `env-embedded-rust-workshop` container. That should open a new window.
+For the best experience, I recommend using [VS Code](https://code.visualstudio.com/) and installing the [Dev Contaienrs](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. Then in VS Code, select **File > Open Folder...* and select this directory. Press *ctrl + shift + p* and enter `Dev Containers: Reopen in Container`. Press *enter* to select the *reopen in container* option.
 
 You should now be in a new VS Code instance connected to the running container. In that window, select **File > Open Workspace from File...** and select `/home/student/workspace/default.code-workspace`. If you get a pop-up asking you to install the recommended extensions, click **Install**.
 
@@ -576,6 +585,15 @@ If you would like to keep learning about embedded Rust, I recommend the followin
 * I recommend Omar Hiari's [Simplified Embedded Rust: ESP Core Library Edition](https://www.amazon.com/Simplified-Embedded-Rust-Core-Library-ebook/dp/B0CW1L8BYS/ref=sr_1_3) book if you want to try Rust on an ESP32
 * The [Let's Get Rusty](https://www.youtube.com/@letsgetrusty) YouTube channel offers a lot of good information about Rust in general
 * The [Rusty Bits](https://www.youtube.com/@therustybits) YouTube channel focuses on Rust for embedded targets
+
+## Workshop Prep Notes
+
+To generate pre-made images for the workshop, run the following from this directory:
+
+```sh
+docker buildx build --platform linux/amd64 -f .\Dockerfile -o type=docker,dest=env-embedded-rust-workshop-amd64.tar -t env-embedded-rust-workshop:latest .
+docker buildx build --platform linux/arm64 -f .\Dockerfile -o type=docker,dest=env-embedded-rust-workshop-arm64.tar -t env-embedded-rust-workshop:latest .
+```
 
 ## License
 
