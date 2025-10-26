@@ -24,6 +24,7 @@ Welcome to the Intro to Embedded Rust Workshop! This worksheet will guide you th
 - [Challenge 1: Add a Button](#challenge-1-add-a-button)
 - [Challenge 2: Debounce](#challenge-2-debounce)
 - [Challenge 3: Generics and Traits](#challenge-3-generics-and-traits)
+- [Going Further](#going-further)
 - [License](#license)
 
 ## Prerequisites
@@ -484,9 +485,97 @@ I recommend using the simple [debounce algorithm for Arduino](https://learn.adaf
 
 ## Challenge 3: Generics and Traits
 
-Oh, you want more?
+Oh, you want more? Well then, the following challenge takes you beyond what was covered in the workshop and dives into *traits* and *generics*.
 
-%%%TODO
+A *trait* is a way to define shared behavior that multiple types can implement. It's Rust's version of interfaces. In other words, it's a contract that says "any type that implements this trait must provide these methods." A trait defines shared capabilities among types, and it helps describe what something can do (e.g. by providing that common interface). Here is a simple example:
+
+```rs
+trait Speak {
+    fn speak(&self) -> String;
+}
+
+struct Dog;
+struct Cat;
+
+impl Speak for Dog {
+    fn speak(&self) -> String {
+        String::from("Woof!")
+    }
+}
+
+impl Speak for Cat {
+    fn speak(&self) -> String {
+        String::from("Meow!")
+    }
+}
+```
+
+If something implements the *Speak trait*, it must provide concrete definitions for the the function signatures listed in the trait. In this case, both `Dog` and `Cat` structs must provide the `speak()` function with the exact same signature (e.g. parameters and return type) listed in the `Speak` trait. We use the `impl <trait> for <item> {...}` pattern to denote that we are implementing the methods outlined in the trait spec for a particular struct or enum.
+
+A *generic* is a placeholder for a type that gets filled in later. It lets you write code that works with multiple types without duplicating logic. Rust is a strontly-typed language and does not support runtime [duck typing](https://en.wikipedia.org/wiki/Duck_typing). As a result, you'll often find that you need to write multiple versions of the same function to handle different types. For example:
+
+```rs
+fn print_i32(x: i32) {
+    println!("{}", x);
+}
+
+fn print_string(x: String) {
+    println!("{}", x);
+}
+```
+
+This can result in a lot of repeat code adding up over time. To help alleviate this type of dubplicate code, Rust offeres the ability to spedify types with a *generic*. For example, we can replace the above code with:
+
+```rs
+fn print<T: Display>(x: T) {
+    println!("{}", x);
+}
+```
+
+At compile-time, `T` is replaced with a concrete type depending on what parameters were sent to the function by the caller. Note that the `: Display` part is a *trait bound*. It says "T can be any type, as long as it implements the Display trait." In this case, [Display](https://doc.rust-lang.org/beta/core/fmt/trait.Display.html) is a trait implemented by the core library, and many primitives automatically implement `Display`, which allows them to be printed to a console.
+
+Also note that the `: <bound>` pattern is a shortcut for the `where` keyword. For example, the above code is functionally equivalent to the following (where you could list multiple trait bounds after `where`):
+
+```rs
+fn print<T>(x: T) 
+where:
+    T: Display,
+{
+    println!("{}", x);
+}
+```
+
+For the first part of your challenge, read through [these examples](https://github.com/ShawnHymel/introduction-to-embedded-rust/blob/main/workspace/apps/generics-examples/src/main.rs) that go through traits and generics.
+
+Next, copy the [ex-1-blinky](./workspace/apps/ex-1-blinky/) project and rename it to **led-wrapper**. In your *main.rs* file, add a generic LED wrapper struct as follows:
+
+```rs
+// Generic LED struct
+struct Led<P> {
+    pin: P,
+    active_high: bool,
+}
+```
+
+Your job is to create an implementation for this `Led` struct that defines the following functions:
+
+* `new(...)` - Returns ownership of a new `Led` struct with the appropriate `pin` and `active_high` fields filled out
+* `on(...)` - Turns the LED on (pay attention to if `active_high` is true or false)
+* `off(...)` - Turns the LED off (pay attention to if `active_high` is true or false)
+
+In `main()`, instantiate a new `Led` struct after you configure your output pin. In your main loop, use the `.on()` and `.off()` methods to toggle the LED instead of doing it with the pin's `.toggle()` method.
+
+> **NOTE**: You can find the solution [here](./workspace/apps/solution-led-wrapper/), but you should try to solve this yourself first before peeking.
+
+## Going Further
+
+If you would like to keep learning about embedded Rust, I recommend the following resources:
+
+* My "Introduction to Embedded Rust" YouTube series is coming soon. In the meantime, you can check out the [examples](https://github.com/ShawnHymel/introduction-to-embedded-rust) I plan to use in the series.
+* The [Rust Book](https://doc.rust-lang.org/book/) is the go-to resource for learning the basics of the Rust language
+* I recommend Omar Hiari's [Simplified Embedded Rust: ESP Core Library Edition](https://www.amazon.com/Simplified-Embedded-Rust-Core-Library-ebook/dp/B0CW1L8BYS/ref=sr_1_3) book if you want to try Rust on an ESP32
+* The [Let's Get Rusty](https://www.youtube.com/@letsgetrusty) YouTube channel offers a lot of good information about Rust in general
+* The [Rusty Bits](https://www.youtube.com/@therustybits) YouTube channel focuses on Rust for embedded targets
 
 ## License
 
