@@ -1,5 +1,5 @@
 # Intro to Embedded Rust Workshop
-# TNH test
+
 
 Welcome to the Intro to Embedded Rust Workshop! This worksheet will guide you through the hands-on portion of creating a few simple demos in Rust for a Raspberry Pi Pico 2. Simply follow the directions to get started.
 
